@@ -144,6 +144,10 @@
 			<version>1.7.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-circuit-breaker</artifactId>
+		</dependency>
     </dependencies>
     <build>
         <plugins>

@@ -1,5 +1,8 @@
 package iudx.catalogue.server.validator;
 
+import io.vertx.circuitbreaker.CircuitBreaker;
+import io.vertx.circuitbreaker.CircuitBreakerOptions;
+import io.vertx.core.Vertx;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
@@ -11,10 +14,16 @@ public final class Validator {
 
   private static final String PKGBASE;
   private final JsonSchema schema;
+  private static CircuitBreaker breaker;
 
   static {
     final String pkgName = Validator.class.getPackage().getName();
     PKGBASE = '/' + pkgName.replace(".", "/");
+
+    breaker = CircuitBreaker.create("my-circuit-breaker", Vertx.vertx(),
+        new CircuitBreakerOptions().setMaxFailures(0).setTimeout(500).setFallbackOnFailure(true)
+            .setResetTimeout(10000)
+    );
   }
 
   public Validator(String schemaPath) throws IOException, ProcessingException {
@@ -52,6 +61,7 @@ public final class Validator {
    * @return isValid boolean
    */
   public boolean validate(String obj) {
+    // breaker.execute(command)
     boolean isValid;
     try {
       JsonNode jsonobj = loadString(obj);
