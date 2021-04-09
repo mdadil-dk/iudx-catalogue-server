@@ -8,6 +8,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.handler.TimeoutHandler;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.DecodeException;
 import org.apache.logging.log4j.LogManager;
@@ -145,6 +146,7 @@ public class ApiServerVerticle extends AbstractVerticle {
      */
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
+    // router.route().handler(TimeoutHandler.create(5000, 408));
     router.route().handler(CorsHandler.create("*").allowedHeaders(ALLOWED_HEADERS));
 
     /**
